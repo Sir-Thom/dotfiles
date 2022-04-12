@@ -1,0 +1,7 @@
+/** Basic config file **/
+
+configuration {
+  show-icons:         true;
+  icon-theme:         "Zaffiro";
+}
+@theme "/home/thomas/.local/share/rofi/themes/appdrawer.rasi"

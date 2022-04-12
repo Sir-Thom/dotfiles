@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Touchegg
+StartupWMClass=touchegg
+Comment=Gestures for touchpad
+GenericName=Gesture Deamon
+Exec=/usr/bin/touchegg
+Icon=touchegg
+Type=Application
+Path=/usr/bin
