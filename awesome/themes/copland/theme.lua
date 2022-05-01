@@ -17,7 +17,7 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 local vicious = require("vicious")
 local brightness_widget = require("awesome-wm-widgets.brightness-widget.brightness")
 local bling = require("bling")
-local ro
+
 --local noobie_exmaple_1 = require("noobie")
 local theme                                     = {}
 
@@ -25,7 +25,7 @@ theme.task_preview_widget_border_radius 		= 3
 theme.task_preview_widget_margin 				= 10 
 theme.task_preview_widget_border_width 			= 2  
 theme.dir                                       = os.getenv("HOME") .. "/.config/awesome/themes/copland"
-theme.wallpaper                                 = "nitrogen --restore" --theme.dir .. "/wall.jpg"
+theme.wallpaper                                 = "nitrogen --restore --set-scaled" --theme.dir .. "/wall.jpg"
 theme.font                                      = "Cabin SemiBold 11"
 theme.fg_normal                                 = "#909090"
 theme.fg_focus                                  = "#C2C2C2"
@@ -33,7 +33,7 @@ theme.bg_normal                                 = "#121218"
 theme.bg_focus                                  = "#121218"
 theme.fg_urgent                                 = "#FAAA25"
 theme.bg_urgent                                 = "#999499"
-theme.border_width                              = dpi(2)
+theme.border_width                              = dpi(3)
 theme.border_normal                             = "#121218"
 theme.border_focus                              = "#B5B1B5"
 theme.border_focus                              = "#B5B1B5"
@@ -428,6 +428,11 @@ s.mytasklist = awful.widget.tasklist {
         layout = wibox.layout.align.vertical,
     },
 }
+local button = wibox.widget{
+    image  = theme.awesome_icon ,
+    resize = false,
+    widget = wibox.widget.imagebox
+}
     -- Create the wibox
     s.mywibox = awful.wibar({ position = "bottom", screen = s, height = dpi(30), bg = theme.bg_normal, fg = theme.fg_normal })
 --	local logout_menu_widget = require("awesome-wm-widgets.logout-menu")
@@ -448,27 +453,29 @@ s.mytasklist = awful.widget.tasklist {
         s.mytasklist, -- Middle widget
         { -- Right widgets
             layout = wibox.layout.fixed.horizontal,
-            wibox.widget.systray(),
+            
             small_spr,
 
             --theme.mail.widget,
             mpdicon,
             theme.mpd.widget,
             bar_spr,
-			battery_widget(),
+			---button,
            
             bar_spr,
             --fsicon,
             --fswidget,
-            brightness_widget(),
             bar_spr,   
-         
-            volume_widget{
-            widget_type = 'vertical_bar', with_icon = true
-            
-        },
-			 
 			
+            --volume_widget{
+            --widget_type = 'vertical_bar', with_icon = true
+            
+       -- },
+			 wibox.widget.systray(),
+			bar_spr,
+			brightness_widget(),
+            bar_spr, 
+			battery_widget(),
             bar_spr,
             mytextclock,
 			
