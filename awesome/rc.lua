@@ -261,7 +261,8 @@ screen.connect_signal("arrange", function (s)
 end)
 
 -- Create a wibox for each screen and add it
-awful.screen.connect_for_each_screen(function(s) beautiful.at_screen_connect(s) end)
+awful.screen.connect_for_each_screen(function(s) beautiful.at_screen_connect(s) s.systray = wibox.widget.systray()
+    s.systray.visible = true  end)
 -- }}}
 local kbdcfg = keyboard_layout.kbdcfg({type = "tui"})
 
@@ -461,23 +462,23 @@ awful.key({altkey}, "Down", function () brightness_widget:dec(10) end, {descript
 	
 
     -- ALSA volume control
-        awful.key({}, "XF86AudioRaiseVolume", function() volume_widget:inc(1) end),
-awful.key({  }, "XF86AudioLowerVolume", function() volume_widget:dec(1) end),
-awful.key({  }, "XF86AudioMute", function() volume_widget:toggle() end),
+    --    awful.key({}, "XF86AudioRaiseVolume", function() volume_widget:inc(1) end),
+--awful.key({  }, "XF86AudioLowerVolume", function() volume_widget:dec(1) end),
+--awful.key({  }, "XF86AudioMute", function() volume_widget:toggle() end),
     
-    awful.key({ altkey }, "Uerp",
+    awful.key({  }, "XF86AudioRaiseVolume",
         function ()
             os.execute(string.format("amixer -q set %s 1%%+", beautiful.volume.channel))
             beautiful.volume.update()
         end,
         {description = "volume up", group = "hotkeys"}),
-    awful.key({ altkey }, "Dowen",
+    awful.key({  }, "XF86AudioLowerVolume",
         function ()
             os.execute(string.format("amixer -q set %s 1%%-", beautiful.volume.channel))
             beautiful.volume.update()
         end,
         {description = "volume down", group = "hotkeys"}),
-    awful.key({ altkey }, "m",
+    awful.key({  }, "XF86AudioMute",
         function ()
             os.execute(string.format("amixer -q set %s toggle", beautiful.volume.togglechannel or beautiful.volume.channel))
             beautiful.volume.update()
@@ -549,8 +550,8 @@ awful.key({  }, "XF86AudioMute", function() volume_widget:toggle() end),
 
     awful.key({ modkey }, "a", function () awful.spawn("thunar") end,
               {description = "run File Manager", group = "launcher"}),
-    awful.key({ modkey }, "e", function () awful.spawn("/opt/waterfox/waterfox") end,
-              {description = "run Waterfox", group = "launcher"}),
+    awful.key({ modkey }, "e", function () awful.spawn("librewolf") end,
+              {description = "run LibreWolf", group = "launcher"}),
 
 
     -- Default
@@ -568,7 +569,7 @@ awful.key({  }, "XF86AudioMute", function() volume_widget:toggle() end),
     -- alternatively use rofi, a dmenu-like application with more features
     -- check https://github.com/DaveDavenport/rofi for more details
     -- rofi
-    awful.key({ altkey },"Tab", function () awful.spawn('rofi -show drun')
+    awful.key({ modkey },"Tab" ,function () awful.spawn('rofi -show drun')
             os.execute(string.format("rofi -show drun -theme %s",
             'run', 'dmenu'))
         end,
@@ -705,6 +706,13 @@ clientbuttons = mytable.join(
 root.keys(globalkeys)
 
 -- }}}
+
+
+
+
+
+
+awful.placement.top(buttons_example, { margins = {top = 40}, parent = awful.screen.focused()})
 
 -- {{{ Rules
 
@@ -882,18 +890,26 @@ beautiful.useless_gap = 2
 
 
 -- auto start
-
-
-
-
+awful.util.spawn("killall volumeicon")
+beautiful.notification_width = 200
+beautiful.notification_max_width = 300
+beautiful.notification_height = 75
+beautiful.notification_max_height = 100
+awful.util.spawn("volumeicon")
 awful.util.spawn("nm-applet ")
+awful.util.spawn("blueman-applet")
 awful.util.spawn("tlp start")
 awful.util.spawn("picom --experimental-backend")
-awful.util.spawn("killall conky")
+
 --awful.util.spawn("conky")
-awful.util.spawn("nitrogen --restore")
-awful.util.spawn("blueman-applet")
-awful.util.spawn("autostart.sh")
+awful.spawn.with_shell("sleep 1 && nitrogen --restore")
+--awful.util.spawn(naughty.notify({title ="test", text = "test",timeout =0 }))
+awful.util.spawn("./ ~/config/autostart/autostart.sh")
+awful.util.spawn("/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 &")
+
+
+
+
 -- garbage 
 collectgarbage("setpause", 100)
 collectgarbage("setstepmul", 400)
